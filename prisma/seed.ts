@@ -103,6 +103,84 @@ async function main() {
   }
 
   console.log("Seeded products");
+
+  // Seed 15 demo orders around Lusaka for the admin dashboard/map.
+  const allProducts = await prisma.product.findMany();
+  const demoCustomers = [
+    { name: "John Mwale", phone: "+260971111111", whatsapp: "+260971111111", district: "Lusaka" },
+    { name: "Mary Banda", phone: "+260972222222", whatsapp: "+260972222222", district: "Lusaka" },
+    { name: "Patrick Sichilongo", phone: "+260973333333", whatsapp: "+260973333333", district: "Copperbelt" },
+    { name: "Grace Phiri", phone: "+260974444444", whatsapp: "+260974444444", district: "Lusaka" },
+    { name: "Daniel Chanda", phone: "+260975555555", whatsapp: "+260975555555", district: "Lusaka" },
+    { name: "Ruth Mumba", phone: "+260976666666", whatsapp: "+260976666666", district: "Central" },
+    { name: "Samuel Lungu", phone: "+260977777777", whatsapp: "+260977777777", district: "Lusaka" },
+    { name: "Agnes Mwila", phone: "+260978888888", whatsapp: "+260978888888", district: "Lusaka" },
+    { name: "Paul Kunda", phone: "+260979999999", whatsapp: "+260979999999", district: "Eastern" },
+    { name: "Catherine Moyo", phone: "+2609611111111", whatsapp: "+2609611111111", district: "Lusaka" },
+    { name: "Francis Mubanga", phone: "+2609622222222", whatsapp: "+2609622222222", district: "Lusaka" },
+    { name: "Lillian Mulenga", phone: "+2609633333333", whatsapp: "+2609633333333", district: "Lusaka" },
+    { name: "Peter Tembo", phone: "+2609644444444", whatsapp: "+2609644444444", district: "Copperbelt" },
+    { name: "Susan Hachipu", phone: "+2609655555555", whatsapp: "+2609655555555", district: "Lusaka" },
+    { name: "Andrew Zulu", phone: "+2609666666666", whatsapp: "+2609666666666", district: "Lusaka" },
+  ];
+
+  const statuses: ("PENDING" | "REVIEWING" | "QUOTED" | "APPROVED" | "INSTALLED" | "COMPLETED")[] = [
+    "PENDING",
+    "REVIEWING",
+    "QUOTED",
+    "APPROVED",
+    "INSTALLED",
+    "COMPLETED",
+  ];
+  const paymentMethods: ("MOMO" | "AIRTEL" | "CARD" | "CASH")[] = ["MOMO", "AIRTEL", "CARD", "CASH"];
+  const paymentStatuses: ("PENDING" | "PAID" | "FAILED")[] = ["PENDING", "PAID", "PAID"];
+
+  // Deterministic jitter around Lusaka centre (-15.4067, 28.2871)
+  const lusakaLat = (i: number) => -15.4067 + (i % 5 - 2) * 0.05 + (i * 0.007) % 0.03;
+  const lusakaLng = (i: number) => 28.2871 + (i % 5 - 2) * 0.05 + (i * 0.009) % 0.03;
+
+  for (let i = 0; i < demoCustomers.length; i++) {
+    const c = demoCustomers[i];
+    const product = allProducts[i % allProducts.length];
+    const farmSize = Math.round((0.5 + (i % 4) * 0.5) * 10) / 10;
+    const pricePerAcre = product.priceZMW / Math.max(product.coverageAcres, 0.1);
+    const amount = Math.round(pricePerAcre * farmSize);
+
+    const existingCustomer = await prisma.customer.findFirst({ where: { phone: c.phone } });
+  const customer = existingCustomer
+    ? existingCustomer
+    : await prisma.customer.create({ data: c });
+
+    const order = await prisma.order.create({
+      data: {
+        customerId: customer.id,
+        productId: product.id,
+        farmSize,
+        waterSource: ["Borehole", "River", "Dam"][i % 3],
+        cropType: ["Maize", "Vegetables", "Wheat", "Groundnuts"][i % 4],
+        lat: lusakaLat(i),
+        lng: lusakaLng(i),
+        accuracy: 12 + (i % 5),
+        address: `Plot ${100 + i}, Chilanga area, ${c.district}`,
+        district: c.district,
+        amount,
+        paymentMethod: paymentMethods[i % paymentMethods.length],
+        paymentStatus: paymentStatuses[i % paymentStatuses.length],
+        status: statuses[i % statuses.length],
+        sitePhotos: [],
+      },
+    });
+
+    await prisma.orderTimeline.create({
+      data: {
+        orderId: order.id,
+        status: order.status,
+        note: `Order created during seed. Status: ${order.status}.`,
+      },
+    });
+  }
+
+  console.log("Seeded 15 demo orders");
   console.log("Done!");
 }
 

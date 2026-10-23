@@ -40,10 +40,9 @@ export function ProductCard({ product }: Props) {
                 {k}: {String(v)}
               </span>
             ))}
-</div>
+          </div>
+        )}
       </div>
     </div>
   );
 }
-        )}
-      </div>

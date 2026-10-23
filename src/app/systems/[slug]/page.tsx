@@ -2,7 +2,8 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { Button } from "@/components/Button";
-import { MapView } from "@/components/MapView";
+import MapView from "@/components/MapView";
+import { CoverageCalculator } from "@/components/CoverageCalculator";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -98,37 +99,5 @@ export default async function SystemDetail({ params }: Props) {
         <MapView height="320px" />
       </section>
     </main>
-  );
-}
-
-function CoverageCalculator({
-  coverageAcres,
-  priceZMW,
-}: {
-  coverageAcres: number;
-  priceZMW: number;
-}) {
-  return (
-    <div className="grid sm:grid-cols-3 gap-4">
-      <div className="rounded-xl border border-green-100 p-4 bg-white">
-        <label className="text-xs text-gray-500">Your farm size (acres)</label>
-        <div className="flex items-center gap-2 mt-1">
-          <span className="text-2xl font-bold text-green-800">{coverageAcres}</span>
-          <span className="text-xs text-gray-400">per unit</span>
-        </div>
-      </div>
-      <div className="rounded-xl border border-green-100 p-4 bg-white">
-        <label className="text-xs text-gray-500">Recommended units</label>
-        <div className="text-2xl font-bold text-green-800 mt-1">
-          {Math.max(1, Math.ceil(coverageAcres / coverageAcres))}
-        </div>
-      </div>
-      <div className="rounded-xl border border-green-100 p-4 bg-white">
-        <label className="text-xs text-gray-500">Estimated total</label>
-        <div className="text-2xl font-bold text-amber-700 mt-1">
-          K{(priceZMW * Math.max(1, Math.ceil(coverageAcres / coverageAcres))).toLocaleString()}
-        </div>
-      </div>
-    </div>
   );
 }

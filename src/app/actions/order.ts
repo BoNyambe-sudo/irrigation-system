@@ -1,41 +1,10 @@
-"server-only";
+"use server";
 
-import { z } from "zod";
 import { prisma } from "@/lib/prisma";
 import { pay } from "@/lib/payments";
 import { emitOrderCreated, emitOrderStatusChange } from "@/lib/realtime";
-
-export const ZambianDistricts = [
-  "Central",
-  "Copperbelt",
-  "Eastern",
-  "Luapula",
-  "Lusaka",
-  "Muchinga",
-  "Northern",
-  "North-Western",
-  "Southern",
-  "Western",
-];
-
-const OrderSchema = z.object({
-  productId: z.string().min(1),
-  name: z.string().min(2, "Name is required"),
-  phone: z.string().min(5, "Phone is required"),
-  whatsapp: z.string().min(5, "WhatsApp number required"),
-  district: z.string().min(1, "District is required"),
-  address: z.string().min(5, "Address is required"),
-  farmSize: z.number().positive("Farm size is required"),
-  waterSource: z.string().min(1, "Water source is required"),
-  cropType: z.string().min(1, "Crop type is required"),
-  lat: z.number().min(-90).max(90),
-  lng: z.number().min(-180).max(180),
-  accuracy: z.number().optional(),
-  sitePhotos: z.array(z.string()).default([]),
-  paymentMethod: z.enum(["MOMO", "AIRTEL", "CARD", "CASH"]),
-});
-
-export type OrderInput = z.infer<typeof OrderSchema>;
+import { OrderSchema } from "@/app/actions/orderSchema";
+import type { OrderInput } from "@/app/actions/orderSchema";
 
 export async function createOrder(input: OrderInput) {
   const parsed = OrderSchema.safeParse(input);
@@ -56,16 +25,15 @@ export async function createOrder(input: OrderInput) {
 
   const payment = await pay(data.paymentMethod, amount, data.phone);
 
-  const customer = await prisma.customer.upsert({
-    where: { phone: data.phone },
-    update: { name: data.name, whatsapp: data.whatsapp, district: data.district },
-    create: {
-      name: data.name,
-      phone: data.phone,
-      whatsapp: data.whatsapp,
-      district: data.district,
-    },
-  });
+  const existingCustomer = await prisma.customer.findFirst({ where: { phone: data.phone } });
+  const customer = existingCustomer
+    ? await prisma.customer.update({
+        where: { id: existingCustomer.id },
+        data: { name: data.name, whatsapp: data.whatsapp, district: data.district },
+      })
+    : await prisma.customer.create({
+        data: { name: data.name, phone: data.phone, whatsapp: data.whatsapp, district: data.district },
+      });
 
   const order = await prisma.order.create({
     data: {
@@ -126,35 +94,63 @@ export async function deleteOrder(orderId: string) {
   return { success: true as const };
 }
 
-export async function createProduct(input: {
-  slug: string;
-  name: string;
-  type: string;
-  coverageAcres: number;
-  priceZMW: number;
-  features: string[];
-  images: string[];
-  specs: Record<string, unknown>;
-}) {
-  return prisma.product.create({ data: input as any });
+// Product CRUD — accept FormData from <form action=...>
+export async function createProduct(formData: FormData) {
+  const slug = String(formData.get("slug") || "").trim();
+  const name = String(formData.get("name") || "").trim();
+  const type = String(formData.get("type") || "").trim();
+  const coverageAcres = Number(formData.get("coverageAcres"));
+  const priceZMW = Number(formData.get("priceZMW"));
+  const features = String(formData.get("features") || "")
+    .split(",")
+    .map((s) => s.trim())
+    .filter(Boolean);
+  const images = String(formData.get("images") || "")
+    .split("\n")
+    .map((s) => s.trim())
+    .filter(Boolean);
+  const specs: Record<string, unknown> = {};
+  for (const line of String(formData.get("specs") || "").split("\n")) {
+    const idx = line.indexOf(":");
+    if (idx > 0) specs[line.slice(0, idx).trim()] = line.slice(idx + 1).trim();
+  }
+  if (!slug || !name || isNaN(coverageAcres) || isNaN(priceZMW)) {
+    throw new Error("Missing required fields");
+  }
+  await prisma.product.create({
+    data: { slug, name, type, coverageAcres, priceZMW, features, images, specs: specs as any },
+  });
 }
 
-export async function updateProduct(
-  id: string,
-  input: Partial<{
-    slug: string;
-    name: string;
-    type: string;
-    coverageAcres: number;
-    priceZMW: number;
-    features: string[];
-    images: string[];
-    specs: Record<string, unknown>;
-  }>
-) {
-  return prisma.product.update({ where: { id }, data: input as any });
+export async function updateProduct(formData: FormData) {
+  const id = String(formData.get("id") || "");
+  const slug = String(formData.get("slug") || "").trim();
+  const name = String(formData.get("name") || "").trim();
+  const type = String(formData.get("type") || "").trim();
+  const coverageAcres = Number(formData.get("coverageAcres"));
+  const priceZMW = Number(formData.get("priceZMW"));
+  const features = String(formData.get("features") || "")
+    .split(",")
+    .map((s) => s.trim())
+    .filter(Boolean);
+  const images = String(formData.get("images") || "")
+    .split("\n")
+    .map((s) => s.trim())
+    .filter(Boolean);
+  const specs: Record<string, unknown> = {};
+  for (const line of String(formData.get("specs") || "").split("\n")) {
+    const idx = line.indexOf(":");
+    if (idx > 0) specs[line.slice(0, idx).trim()] = line.slice(idx + 1).trim();
+  }
+  if (!id) throw new Error("Missing id");
+  await prisma.product.update({
+    where: { id },
+    data: { slug, name, type, coverageAcres, priceZMW, features, images, specs: specs as any },
+  });
 }
 
-export async function deleteProduct(id: string) {
-  return prisma.product.delete({ where: { id } });
+export async function deleteProduct(formData: FormData) {
+  const id = String(formData.get("id") || "");
+  if (!id) throw new Error("Missing id");
+  await prisma.product.delete({ where: { id } });
 }
