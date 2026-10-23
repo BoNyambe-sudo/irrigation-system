@@ -10,7 +10,7 @@ const MapInner = dynamic(() => import("./MapInner"), {
   ssr: false,
   loading: () => (
     <div
-      style={{ height }}
+      style={{ height: "100%" }}
       className="rounded-lg bg-green-50 flex items-center justify-center text-gray-400 text-sm"
     >
       Loading map…
@@ -41,7 +41,7 @@ export default function MapView({
   if (!isClient) {
     return (
       <div
-        style={{ height }}
+    style={{ height: "100%" }}
         className="rounded-lg bg-green-50 flex items-center justify-center text-gray-400 text-sm"
       >
         Loading map…

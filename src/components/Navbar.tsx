@@ -27,11 +27,16 @@ export async function Navbar() {
               <User className="w-4 h-4" />
               {(session.user as any).name || "Account"}
             </Link>
-          ) : (
-            <Link href="/auth/signin" className="text-sm text-gray-700 hover:text-green-700 flex items-center gap-1">
-              <User className="w-4 h-4" /> Sign in
-            </Link>
-          )}
+            ) : (
+              <>
+                <Link href="/auth/signup" className="text-sm text-gray-700 hover:text-green-700">
+                  Sign up
+                </Link>
+                <Link href="/auth/signin" className="text-sm text-gray-700 hover:text-green-700 flex items-center gap-1">
+                  <User className="w-4 h-4" /> Sign in
+                </Link>
+              </>
+            )}
         </div>
       </div>
     </header>
