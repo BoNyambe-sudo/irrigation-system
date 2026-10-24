@@ -6,6 +6,7 @@
   --primary: #16a34a;
   --primary-foreground: #ffffff;
   --earth: #a16207;
+  --muted: #6b7280;
 }
 
 @theme inline {
@@ -14,6 +15,7 @@
   --color-primary: var(--primary);
   --color-primary-foreground: var(--primary-foreground);
   --color-earth: var(--earth);
+  --color-muted: var(--muted);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
@@ -22,4 +24,36 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
+}
+
+/* Scrollbar */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #16a34a #e5e7eb;
+}
+*::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+*::-webkit-scrollbar-track {
+  background: #e5e7eb;
+}
+*::-webkit-scrollbar-thumb {
+  background: #16a34a;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--muted-foreground);
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-track {
+  border-radius: 5px;
+  background: var(--muted);
 }

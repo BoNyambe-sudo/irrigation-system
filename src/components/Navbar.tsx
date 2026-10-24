@@ -1,10 +1,13 @@
-import Link from "next/link";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth";
-import { LayoutGrid, ShoppingBag, User, LogOut } from "lucide-react";
+"use client";
 
-export async function Navbar() {
-  const session = await getServerSession(authOptions);
+import { useState } from "react";
+import Link from "next/link";
+import { useSession } from "next-auth/react";
+import { LayoutGrid, ShoppingBag, User, LogOut, Menu, X } from "lucide-react";
+import MobileMenu from "@/components/MobileMenu";
+
+export default function Navbar() {
+  const { data: session } = useSession();
   const role = (session?.user as any)?.role;
 
   return (
@@ -22,21 +25,27 @@ export async function Navbar() {
           ) : null}
         </nav>
         <div className="flex items-center gap-2">
+          <MobileMenu />
           {session?.user ? (
-            <Link href={role === "ADMIN" ? "/admin" : "/"} className="flex items-center gap-2 text-sm text-gray-700 hover:text-green-700">
-              <User className="w-4 h-4" />
-              {(session.user as any).name || "Account"}
-            </Link>
-            ) : (
-              <>
-                <Link href="/auth/signup" className="text-sm text-gray-700 hover:text-green-700">
-                  Sign up
-                </Link>
-                <Link href="/auth/signin" className="text-sm text-gray-700 hover:text-green-700 flex items-center gap-1">
-                  <User className="w-4 h-4" /> Sign in
-                </Link>
-              </>
-            )}
+            <>
+              <Link href="/profile" className="flex items-center gap-2 text-sm text-gray-700 hover:text-green-700">
+                <User className="w-4 h-4" />
+                {(session.user as any).name || "Account"}
+              </Link>
+              {role === "ADMIN" && (
+                <Link href="/admin" className="text-sm text-gray-700 hover:text-green-700">Dashboard</Link>
+              )}
+            </>
+          ) : (
+            <>
+              <Link href="/auth/signup" className="text-sm text-gray-700 hover:text-green-700">
+                Sign up
+              </Link>
+              <Link href="/auth/signin" className="text-sm text-gray-700 hover:text-green-700 flex items-center gap-1">
+                <User className="w-4 h-4" /> Sign in
+              </Link>
+            </>
+          )}
         </div>
       </div>
     </header>

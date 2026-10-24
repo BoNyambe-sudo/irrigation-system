@@ -3,7 +3,7 @@ import { Map } from "lucide-react";
 import { OrderStatusSelect } from "@/components/OrderStatusSelect";
 import { type LiveOrder } from "@/components/LiveOrders";
 
-export function OrderRow({ order }: { order: LiveOrder }) {
+export function OrderRow({ order, onStatusChange }: { order: LiveOrder; onStatusChange?: (id: string, status: string) => void }) {
   return (
     <tr className="border-b border-green-50 hover:bg-green-50/40">
       <td className="px-4 py-3">
@@ -15,7 +15,7 @@ export function OrderRow({ order }: { order: LiveOrder }) {
       <td className="px-4 py-3 font-semibold text-amber-700">K{order.amount.toLocaleString()}</td>
       <td className="px-4 py-3 text-gray-600">{order.paymentMethod}</td>
       <td className="px-4 py-3">
-        <OrderStatusSelect orderId={order.id} status={order.status} />
+        <OrderStatusSelect orderId={order.id} status={order.status} onChange={(s) => onStatusChange?.(order.id, s)} />
       </td>
       <td className="px-4 py-3">
         <div className="flex items-center gap-2">

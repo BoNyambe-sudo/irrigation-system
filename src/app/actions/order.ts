@@ -3,7 +3,7 @@
 import { prisma } from "@/lib/prisma";
 import { pay } from "@/lib/payments";
 import { emitOrderCreated, emitOrderStatusChange } from "@/lib/realtime";
-import { OrderSchema } from "@/app/actions/orderSchema";
+import { revalidatePath } from "next/cache";
 import type { OrderInput } from "@/app/actions/orderSchema";
 
 export async function createOrder(input: OrderInput) {
@@ -86,6 +86,8 @@ export async function updateOrderStatus(orderId: string, status: string) {
   });
 
   emitOrderStatusChange(order);
+  revalidatePath("/admin/orders");
+
   return { success: true as const, order };
 }
 
@@ -120,6 +122,8 @@ export async function createProduct(formData: FormData) {
   await prisma.product.create({
     data: { slug, name, type, coverageAcres, priceZMW, features, images, specs: specs as any },
   });
+  revalidatePath("/admin/products");
+  revalidatePath("/systems");
 }
 
 export async function updateProduct(formData: FormData) {
@@ -147,10 +151,13 @@ export async function updateProduct(formData: FormData) {
     where: { id },
     data: { slug, name, type, coverageAcres, priceZMW, features, images, specs: specs as any },
   });
+  revalidatePath("/admin/products");
+  revalidatePath("/systems");
 }
 
 export async function deleteProduct(formData: FormData) {
   const id = String(formData.get("id") || "");
   if (!id) throw new Error("Missing id");
   await prisma.product.delete({ where: { id } });
-}
+  revalidatePath("/admin/products");
+  revalidatePath("/systems");}

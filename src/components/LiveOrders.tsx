@@ -64,7 +64,7 @@ export function LiveOrders({ initialOrders }: { initialOrders: LiveOrder[] }) {
               </td>
             </tr>
           ) : (
-            orders.map((o) => <OrderRow key={o.id} order={o} />)
+            orders.map((o) => <OrderRow key={o.id} order={o} onStatusChange={(id, s) => setOrders((prev) => prev.map((x) => x.id === id ? { ...x, status: s as any } : x))} />)
           )}
         </tbody>
       </table>

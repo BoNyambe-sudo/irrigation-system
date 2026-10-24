@@ -1,6 +1,6 @@
 "use client";
 
-import { useTransition } from "react";
+import { useRouter } from "next/navigation";
 import { updateOrderStatus } from "@/app/actions/order";
 import { toast } from "sonner";
 
@@ -24,7 +24,7 @@ const colors: Record<string, string> = {
   CANCELLED: "bg-red-100 text-red-800",
 };
 
-export function OrderStatusSelect({ orderId, status }: { orderId: string; status: string }) {
+export function OrderStatusSelect({ orderId, status, onChange }: { orderId: string; status: string; onChange?: (status: string) => void }) {
   const [isPending, startTransition] = useTransition();
 
   return (
@@ -36,7 +36,7 @@ export function OrderStatusSelect({ orderId, status }: { orderId: string; status
         const next = e.target.value;
         startTransition(async () => {
           const res = await updateOrderStatus(orderId, next);
-          if (res.success) toast.success("Status updated");
+          if (res.success) { toast.success("Status updated"); onChange?.(next); router.refresh(); }
           else toast.error("Failed");
         });
       }}

@@ -3,10 +3,9 @@ import { GeistSans } from "geist/font/sans";
 import { GeistMono } from "geist/font/mono";
 import "./globals.css";
 import "leaflet/dist/leaflet.css";
-import { Navbar } from "@/components/Navbar";
-import { Footer } from "@/components/Footer";
+import Providers from "@/components/Providers";
+import Chrome from "@/components/Chrome";
 import { ToastProvider } from "@/components/ToastProvider";
-import { WhatsAppFloat } from "@/components/WhatsAppFloat";
 
 export const metadata: Metadata = {
   title: "Smart Irrigation Zambia",
@@ -20,13 +19,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${GeistSans.variable} ${GeistMono.variable}`}>
-      <body className="antialiased">
+    <body className="antialiased">
+      <Providers>
         <ToastProvider />
-        <Navbar />
-        {children}
-        <Footer />
-        <WhatsAppFloat />
-      </body>
+        <Chrome>{children}</Chrome>
+      </Providers>
+    </body>
     </html>
   );
 }

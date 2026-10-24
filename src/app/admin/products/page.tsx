@@ -1,7 +1,7 @@
 import { prisma } from "@/lib/prisma";
 import { createProduct, updateProduct, deleteProduct } from "@/app/actions/order";
 import { Button } from "@/components/Button";
-import { toast } from "sonner";
+import DeleteProductButton from "@/components/DeleteProductButton";
 import type { Product } from "@prisma/client";
 
 export default async function AdminProductsPage() {
@@ -95,13 +95,11 @@ function EditProductForm({ product }: { product: Product }) {
         <textarea name="specs" defaultValue={Object.entries((product.specs as Record<string, unknown>) ?? {}).map(([k, v]) => `${k}: ${v}`).join("\n")} className="w-full px-2 py-1 rounded border border-green-200" rows={2} />
         <div className="flex gap-2">
           <Button type="submit" variant="primary" className="text-xs px-2 py-1">Save</Button>
-          <form action={deleteProduct} style={{ display: "inline" }}>
-            <input type="hidden" name="id" value={product.id} />
-            <button type="submit" className="text-red-600 hover:underline text-xs" onClick={(e) => { if (!confirm("Delete this product?")) e.preventDefault(); }}>
-              Delete
-            </button>
-          </form>
         </div>
+      </form>
+      <form action={deleteProduct} style={{ display: "inline" }} className="mt-2">
+        <input type="hidden" name="id" value={product.id} />
+        <DeleteProductButton />
       </form>
     </details>
   );

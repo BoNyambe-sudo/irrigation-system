@@ -2,9 +2,14 @@ import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { ProductCard } from "@/components/ProductCard";
 
-export default async function Systems() {
-  const products = await prisma.product.findMany({ orderBy: { createdAt: "desc" } });
-  const types = Array.from(new Set(products.map((p) => p.type)));
+export default async function Systems({ searchParams }: { searchParams: { type?: string } }) {
+  const type = searchParams?.type;
+  const products = await prisma.product.findMany({
+    where: type ? { type } : undefined,
+    orderBy: { createdAt: "desc" },
+  });
+  const all = await prisma.product.findMany();
+  const types = Array.from(new Set(all.map((p) => p.type)));
 
   return (
     <main className="max-w-6xl mx-auto px-4 py-10">
@@ -16,15 +21,15 @@ export default async function Systems() {
       <div className="flex flex-wrap gap-2 mb-6">
         <Link
           href="/systems"
-          className="px-3 py-1 rounded-full text-sm bg-green-700 text-white"
+          className={`px-3 py-1 rounded-full text-sm ${!type ? "bg-green-700 text-white" : "bg-white border border-green-200 text-green-800 hover:bg-green-50"}`}
         >
           All
         </Link>
         {types.map((t) => (
           <Link
             key={t}
-            href="/systems"
-            className="px-3 py-1 rounded-full text-sm bg-white border border-green-200 text-green-800 hover:bg-green-50"
+            href={`/systems?type=${encodeURIComponent(t)}`}
+            className={`px-3 py-1 rounded-full text-sm ${type === t ? "bg-green-700 text-white" : "bg-white border border-green-200 text-green-800 hover:bg-green-50"}`}
           >
             {t}
           </Link>
