@@ -17,9 +17,9 @@ export function Card({
   accent?: Accent;
 }) {
   return (
-    <div className="rounded-xl border border-green-100 bg-white p-4 shadow-sm">
-      <div className="text-sm text-gray-500">{title}</div>
-      <div className={`text-2xl font-bold mt-1 ${accents[accent]}`}>{value}</div>
+    <div className="rounded-xl border border-green-100 bg-white p-4 shadow-sm min-w-0 overflow-hidden">
+      <div className="text-sm text-gray-500 truncate">{title}</div>
+      <div className={`text-2xl font-bold mt-1 truncate ${accents[accent]}`}>{value}</div>
     </div>
   );
 }

@@ -86,7 +86,7 @@ export async function updateOrderStatus(orderId: string, status: string) {
   });
 
   emitOrderStatusChange(order);
-  revalidatePath("/admin/orders");
+
 
   return { success: true as const, order };
 }
