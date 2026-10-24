@@ -20,9 +20,9 @@ export default function MobileMenu() {
           <nav className="flex flex-col p-4 gap-3 text-sm text-gray-700">
             <Link href="/systems" onClick={() => setOpen(false)}>Systems</Link>
             <Link href="/order" onClick={() => setOpen(false)}>Order</Link>
-            {role === "ADMIN" && <Link href="/admin" onClick={() => setOpen(false)}>Admin</Link>}
+            {role === "ADMIN" && <Link href="/admin" onClick={() => setOpen(false)}>Dashboard</Link>}
             {session?.user ? (
-              <Link href={role === "ADMIN" ? "/admin" : "/profile"} onClick={() => setOpen(false)}>
+              <Link href="/profile" onClick={() => setOpen(false)}>
                 <User className="w-4 h-4 inline mr-1" /> Account
               </Link>
             ) : (

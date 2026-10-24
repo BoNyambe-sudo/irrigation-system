@@ -20,32 +20,30 @@ export default function Navbar() {
         <nav className="hidden md:flex items-center gap-6 text-sm text-gray-700">
           <Link href="/systems" className="hover:text-green-700 transition">Systems</Link>
           <Link href="/order" className="hover:text-green-700 transition">Order</Link>
+          <Link href="/my-orders" className="hover:text-green-700 transition">Track order</Link>
           {role === "ADMIN" ? (
-            <Link href="/admin" className="hover:text-green-700 transition">Admin</Link>
+            <Link href="/admin" className="hover:text-green-700 transition">Dashboard</Link>
           ) : null}
         </nav>
         <div className="flex items-center gap-2">
-          <MobileMenu />
-          {session?.user ? (
-            <>
+          <div className="hidden md:flex items-center gap-2">
+            {session?.user ? (
               <Link href="/profile" className="flex items-center gap-2 text-sm text-gray-700 hover:text-green-700">
                 <User className="w-4 h-4" />
-                {(session.user as any).name || "Account"}
+                <span className="hidden sm:inline">{(session.user as any).name || "Account"}</span>
               </Link>
-              {role === "ADMIN" && (
-                <Link href="/admin" className="text-sm text-gray-700 hover:text-green-700">Dashboard</Link>
-              )}
-            </>
-          ) : (
-            <>
-              <Link href="/auth/signup" className="text-sm text-gray-700 hover:text-green-700">
-                Sign up
-              </Link>
-              <Link href="/auth/signin" className="text-sm text-gray-700 hover:text-green-700 flex items-center gap-1">
-                <User className="w-4 h-4" /> Sign in
-              </Link>
-            </>
-          )}
+            ) : (
+              <>
+                <Link href="/auth/signup" className="text-sm text-gray-700 hover:text-green-700">
+                  Sign up
+                </Link>
+                <Link href="/auth/signin" className="text-sm text-gray-700 hover:text-green-700 flex items-center gap-1">
+                  <User className="w-4 h-4" /> Sign in
+                </Link>
+              </>
+            )}
+          </div>
+          <MobileMenu />
         </div>
       </div>
     </header>
