@@ -110,7 +110,7 @@ export default function CheckoutForm({ product }: Props) {
       });
       if (res.success) {
         toast.success("Order created! Redirecting...");
-        router.push(`/admin/orders/${res.orderId}`);
+        router.push(`/my-orders?q=${res.orderId}`);
       } else {
         toast.error(res.error);
       }
