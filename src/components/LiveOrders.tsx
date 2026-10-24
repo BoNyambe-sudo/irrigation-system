@@ -43,7 +43,7 @@ export function LiveOrders({ initialOrders }: { initialOrders: LiveOrder[] }) {
   });
 
   return (
-    <div className="rounded-xl border border-green-100 bg-white overflow-hidden">
+    <div className="rounded-xl border border-green-100 bg-white overflow-x-auto">
       <table className="w-full text-sm">
         <thead className="bg-green-50 text-green-800 text-left">
           <tr>

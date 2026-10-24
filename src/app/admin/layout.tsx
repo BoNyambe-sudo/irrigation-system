@@ -26,9 +26,9 @@ export default async function AdminLayout({ children }: { children: React.ReactN
   ];
 
   return (
-    <div className="min-h-screen bg-green-50/30 flex">
+    <div className="h-screen overflow-hidden bg-green-50/30 flex">
       <AdminSidebar items={nav} name={(session.user as any).name || "Admin"} />
-      <main className="flex-1 p-6">
+      <main className="flex-1 p-2 md:p-6 overflow-auto min-w-0">
         <div className="mb-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
           <h1 className="text-2xl font-bold text-green-900">Admin dashboard</h1>
           <Link href="/" className="text-sm text-green-700 hover:underline">

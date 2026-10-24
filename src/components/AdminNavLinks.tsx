@@ -17,7 +17,7 @@ export default function AdminNavLinks({ items, collapsed }: { items: { href: str
           <Link
             key={n.href}
             href={n.href}
-            className={`flex items-center justify-between gap-2 px-3 py-2 rounded-lg text-sm ${active ? "bg-green-100 text-green-900 font-semibold" : "text-green-900 hover:bg-green-50"}`}
+            className={`flex items-center ${collapsed ? "justify-center" : "justify-between"} gap-2 px-3 py-2 rounded-lg text-sm ${active ? "bg-green-100 text-green-900 font-semibold" : "text-green-900 hover:bg-green-50"}`}
           >
             <span className="flex items-center gap-2">
               <Icon className="w-4 h-4" /> {!collapsed && n.label}

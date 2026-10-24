@@ -9,7 +9,7 @@ export default async function AdminCustomersPage() {
   return (
     <div className="space-y-4">
       <h2 className="text-xl font-bold text-green-900">Customers</h2>
-      <div className="rounded-xl border border-green-100 bg-white overflow-hidden">
+      <div className="rounded-xl border border-green-100 bg-white overflow-x-auto">
         <table className="w-full text-sm">
           <thead className="bg-green-50 text-green-800 text-left">
             <tr>

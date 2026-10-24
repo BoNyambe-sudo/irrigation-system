@@ -27,6 +27,7 @@ const colors: Record<string, string> = {
 
 export function OrderStatusSelect({ orderId, status, onChange }: { orderId: string; status: string; onChange?: (status: string) => void }) {
   const [isPending, startTransition] = useTransition();
+  const router = useRouter();
 
   return (
     <select
