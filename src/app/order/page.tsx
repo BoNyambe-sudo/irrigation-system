@@ -10,7 +10,7 @@ export default async function OrderIndex() {
       <h1 className="text-3xl font-bold text-green-900 mb-2">Start your order</h1>
       <p className="text-gray-600 mb-6">Pick a system to configure your irrigation quote.</p>
       <div className="grid sm:grid-cols-2 gap-4">
-        {products.map((p) => (
+        {products.map((p: any) => (
           <div key={p.id} className="rounded-xl border border-green-100 p-4 bg-white flex items-center justify-between gap-3">
             <div>
               <div className="text-xs text-green-700 font-semibold">{p.type}</div>

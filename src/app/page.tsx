@@ -122,7 +122,7 @@ export default async function Home() {
             Featured systems
           </h2>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {products.map((p) => (
+            {products.map((p: any) => (
               <ProductCard key={p.id} product={p} />
             ))}
           </div>

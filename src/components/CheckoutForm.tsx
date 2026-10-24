@@ -2,7 +2,7 @@
 
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
-import type { Product } from "@prisma/client";
+
 import { Button } from "@/components/Button";
 import { createOrder } from "@/app/actions/order";
 import { ZambianDistricts } from "@/app/actions/orderSchema";
@@ -10,7 +10,7 @@ import { toast } from "sonner";
 import MapView from "@/components/MapView";
 
 type Props = {
-  product: Product;
+  product: any;
 };
 
 type Step = 1 | 2 | 3 | 4 | 5;

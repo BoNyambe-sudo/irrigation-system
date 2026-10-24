@@ -1,7 +1,7 @@
 import Link from "next/link";
-import type { Product } from "@prisma/client";
 
-type Props = { product: Product };
+
+type Props = { product: any };
 
 export function ProductCard({ product }: Props) {
   const image = product.images[0] ?? "/placeholder.jpg";

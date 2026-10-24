@@ -16,7 +16,7 @@ export default async function MyOrdersPage({ searchParams }: { searchParams: Pro
       const customers = await prisma.customer.findMany({ where: { phone: { contains: q } } });
       if (customers.length) {
         orders = await prisma.order.findMany({
-          where: { customerId: { in: customers.map((c) => c.id) } },
+          where: { customerId: { in: customers.map((c: any) => c.id) } },
           include: { customer: true, product: true, timeline: { orderBy: { createdAt: "asc" } } },
           orderBy: { createdAt: "desc" },
         });

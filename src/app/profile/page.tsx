@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useSession, updateSession } from "next-auth/react";
+import { useSession } from "next-auth/react";
 import Image from "next/image";
 
 export default function ProfilePage() {

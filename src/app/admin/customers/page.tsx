@@ -26,7 +26,7 @@ export default async function AdminCustomersPage() {
                 <td colSpan={5} className="px-4 py-8 text-center text-gray-400">No customers yet.</td>
               </tr>
             ) : (
-              customers.map((c) => (
+              customers.map((c: any) => (
                 <tr key={c.id} className="border-b border-green-50">
                   <td className="px-4 py-3 font-medium text-green-900">{c.name}</td>
                   <td className="px-4 py-3 text-gray-600">{c.phone}</td>

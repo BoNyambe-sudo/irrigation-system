@@ -9,7 +9,7 @@ export default async function AdminPage() {
       prisma.order.count({ where: { paymentStatus: "PENDING" } }),
       prisma.order
         .aggregate({ _sum: { amount: true }, where: { paymentStatus: "PAID" } })
-        .then((r) => r._sum.amount ?? 0),
+        .then((r: any) => r._sum.amount ?? 0),
       prisma.product.count(),
       prisma.customer.count(),
     ]);
@@ -36,7 +36,7 @@ export default async function AdminPage() {
             <p className="text-sm text-gray-500">No orders yet.</p>
           ) : (
             <ul className="space-y-2">
-              {recentOrders.map((o) => (
+              {recentOrders.map((o: any) => (
                 <li key={o.id} className="flex items-center justify-between text-sm border-b border-green-50 pb-2">
                   <div>
                     <span className="font-medium text-green-900">{o.customer.name}</span>

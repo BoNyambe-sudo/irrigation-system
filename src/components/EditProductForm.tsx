@@ -3,9 +3,9 @@
 import { useState } from "react";
 import { Button } from "@/components/Button";
 import { updateProduct, deleteProduct } from "@/app/actions/order";
-import type { Product } from "@prisma/client";
 
-export default function EditProductForm({ product }: { product: Product }) {
+
+export default function EditProductForm({ product }: { product: any }) {
   const [open, setOpen] = useState(false);
   return (
     <details open={open} onToggle={(e) => setOpen((e.target as HTMLDetailsElement).open)} className="group min-w-[260px]">

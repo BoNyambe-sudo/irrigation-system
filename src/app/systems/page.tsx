@@ -10,7 +10,7 @@ export default async function Systems({ searchParams }: { searchParams: Promise<
     orderBy: { createdAt: "desc" },
   });
   const all = await prisma.product.findMany();
-  const types = Array.from(new Set(all.map((p) => p.type)));
+  const types = Array.from(new Set(all.map((p: any) => p.type)));
 
   return (
     <main className="max-w-6xl mx-auto px-4 py-10">
@@ -41,7 +41,7 @@ export default async function Systems({ searchParams }: { searchParams: Promise<
         <p className="text-gray-500">No systems yet.</p>
       ) : (
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {products.map((p) => (
+          {products.map((p: any) => (
             <ProductCard key={p.id} product={p} />
           ))}
         </div>
