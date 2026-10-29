@@ -1,23 +1,41 @@
-// Lightweight in-browser notification chime. No external asset required.
 let audioCtx: AudioContext | null = null;
+
+function initAudio(): void {
+  const Ctx = (window as any).AudioContext || (window as any).webkitAudioContext;
+  if (!Ctx) return;
+  audioCtx = new Ctx();
+  if (audioCtx!.state === "suspended") {
+    audioCtx!.resume().catch(() => {});
+  }
+}
+
+if (typeof window !== "undefined") {
+  document.addEventListener("click", initAudio, { once: true, passive: true });
+}
 
 function ensureCtx(): AudioContext | null {
   try {
-    const Ctx = (window as any).AudioContext || (window as any).webkitAudioContext;
-    if (!Ctx) return null;
-    if (!audioCtx) audioCtx = new Ctx();
-    const ctx = audioCtx;
-    if (!ctx) return null;
-    if (ctx.state === "suspended") ctx.resume();
+    if (!audioCtx) {
+      const Ctx = (window as any).AudioContext || (window as any).webkitAudioContext;
+      if (!Ctx) return null;
+      audioCtx = new Ctx();
+    }
+    const ctx = audioCtx as AudioContext;
+    if (ctx.state === "suspended") {
+      ctx.resume().catch(() => {});
+    }
     return ctx;
   } catch {
     return null;
   }
 }
 
-export function playSound() {
+export async function playSound() {
   const ctx = ensureCtx();
   if (!ctx) return;
+  if (ctx.state === "suspended") {
+    await ctx.resume().catch(() => {});
+  }
   const now = ctx.currentTime;
   [880, 660].forEach((freq, i) => {
     const osc = ctx.createOscillator();

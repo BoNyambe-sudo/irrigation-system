@@ -1,9 +1,10 @@
 "use client";
 
+import { signOut } from "next-auth/react";
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import AdminNavLinks from "@/components/AdminNavLinks";
-import { LayoutGrid, ChevronLeft, ChevronRight } from "lucide-react";
+import { LayoutGrid, ChevronLeft, ChevronRight, LogOut } from "lucide-react";
 
 export default function AdminSidebar({ items, name }: { items: { href: string; label: string; badge?: number }[]; name: string }) {
   const [collapsed, setCollapsed] = useState(false);
@@ -23,6 +24,14 @@ export default function AdminSidebar({ items, name }: { items: { href: string; l
         <AdminNavLinks items={items} collapsed={collapsed} />
         <div className="pt-4 border-t border-green-100 text-xs text-gray-500">
           {!collapsed && <>Signed in as {name || "Admin"}</>}
+          {!collapsed && (
+            <button
+              onClick={() => signOut()}
+              className="mt-2 flex items-center gap-2 text-sm text-red-600 hover:text-red-800"
+            >
+              <LogOut className="w-4 h-4" /> Sign out
+            </button>
+          )}
         </div>
       </aside>
       <button

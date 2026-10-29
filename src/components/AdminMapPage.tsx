@@ -5,7 +5,7 @@ import MapView from "@/components/MapView";
 
 type ClusterOrder = {
   id: string;
-  customer: { name: string; phone: string; district: string };
+  customer: { name: string; phone: string; province: string };
   product: { name: string; slug: string };
   amount: number;
   lat: number;
@@ -33,7 +33,7 @@ export default function AdminMapPage({ orders }: { orders: ClusterOrder[] }) {
           popup: (
             <div className="text-sm">
               <div className="font-semibold">{o.customer.name}</div>
-              <div>{o.customer.district}</div>
+              <div>{o.customer.province}</div>
               <div className="text-amber-700 font-bold">K{o.amount.toLocaleString()}</div>
               <div className="text-xs text-green-700">{o.product.name}</div>
               <a href={`/admin/orders/${o.id}`} className="text-xs text-green-700 hover:underline">
@@ -47,7 +47,7 @@ export default function AdminMapPage({ orders }: { orders: ClusterOrder[] }) {
       {selected && (
         <div className="rounded-xl border border-green-100 bg-white p-4">
           <h3 className="font-semibold text-green-900">{selected.customer.name}</h3>
-          <p className="text-sm text-gray-600">{selected.customer.district} · {selected.address}</p>
+          <p className="text-sm text-gray-600">{selected.customer.province} · {selected.address}</p>
           <p className="text-sm text-gray-600">Farm: {selected.farmSize} acres · {selected.cropType}</p>
         </div>
       )}

@@ -49,7 +49,7 @@ export default async function AdminOrderDetail({ params }: { params: Promise<{ i
               </div>
               <div>
                 <dt className="text-gray-500">District</dt>
-                <dd className="font-medium text-green-900">{order.customer.district}</dd>
+                <dd className="font-medium text-green-900">{order.customer.province}</dd>
               </div>
             </dl>
           </div>

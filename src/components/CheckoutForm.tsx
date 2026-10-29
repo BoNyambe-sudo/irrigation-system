@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 
 import { Button } from "@/components/Button";
 import { createOrder } from "@/app/actions/order";
-import { ZambianDistricts } from "@/app/actions/orderSchema";
+import { ZambianProvinces } from "@/app/actions/orderSchema";
 import { toast } from "sonner";
 import MapView from "@/components/MapView";
 
@@ -29,7 +29,7 @@ export default function CheckoutForm({ product }: Props) {
     lng: 28.2871,
     accuracy: 0,
     address: "",
-    district: "Lusaka",
+    province: "Lusaka",
   });
   const [farm, setFarm] = useState({
     farmSize: Math.max(0.5, Number(product.coverageAcres) || 1),
@@ -81,7 +81,7 @@ export default function CheckoutForm({ product }: Props) {
 
   const canNext = () => {
     if (step === 1) return customer.name.trim() && customer.phone.trim() && customer.whatsapp.trim();
-    if (step === 2) return location.address.trim() && location.district.trim();
+    if (step === 2) return location.address.trim() && location.province.trim();
     if (step === 3) return farm.farmSize > 0 && farm.waterSource && farm.cropType;
     if (step === 4) return !!payment.method;
     return true;
@@ -97,7 +97,7 @@ export default function CheckoutForm({ product }: Props) {
         name: customer.name,
         phone: customer.phone,
         whatsapp: customer.whatsapp,
-        district: location.district,
+        province: location.province,
         address: location.address,
         farmSize: Number(farm.farmSize),
         waterSource: farm.waterSource,
@@ -187,10 +187,10 @@ export default function CheckoutForm({ product }: Props) {
                 <label className="text-sm text-gray-600">District</label>
                 <select
                   className="w-full mt-1 px-3 py-2 rounded-lg border border-green-200 bg-white"
-                  value={location.district}
-                  onChange={(e) => setLocation({ ...location, district: e.target.value })}
+                  value={location.province}
+                  onChange={(e) => setLocation({ ...location, province: e.target.value })}
                 >
-                  {ZambianDistricts.map((d) => (
+                  {ZambianProvinces.map((d) => (
                     <option key={d} value={d}>
                       {d}
                     </option>
@@ -316,7 +316,7 @@ export default function CheckoutForm({ product }: Props) {
               </div>
               <div className="rounded-lg border border-green-100 p-3">
                 <div className="font-semibold text-green-800 mb-1">Location</div>
-                <div>{location.district}</div>
+                <div>{location.province}</div>
                 <div className="line-clamp-2">{location.address}</div>
                 <div className="text-xs text-gray-500">
                   {location.lat.toFixed(5)}, {location.lng.toFixed(5)}

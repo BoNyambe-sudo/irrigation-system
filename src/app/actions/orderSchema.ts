@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const ZambianDistricts = [
+export const ZambianProvinces = [
   "Central",
   "Copperbelt",
   "Eastern",
@@ -18,7 +18,7 @@ export const OrderSchema = z.object({
   name: z.string().min(2, "Name is required"),
   phone: z.string().min(5, "Phone is required"),
   whatsapp: z.string().min(5, "WhatsApp number required"),
-  district: z.string().min(1, "District is required"),
+  province: z.string().min(1, "Province is required"),
   address: z.string().min(5, "Address is required"),
   farmSize: z.number().positive("Farm size is required"),
   waterSource: z.string().min(1, "Water source is required"),

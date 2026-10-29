@@ -2,8 +2,9 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { useSession } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 import { LayoutGrid, ShoppingBag, User, LogOut, Menu, X } from "lucide-react";
+import { Button } from "@/components/Button";
 import MobileMenu from "@/components/MobileMenu";
 
 export default function Navbar() {
@@ -39,15 +40,25 @@ export default function Navbar() {
         <div className="flex items-center gap-2">
           <div className="hidden md:flex items-center gap-2">
             {session?.user ? (
-              <Link
-                href="/profile"
-                className="flex items-center gap-2 text-sm text-gray-700 hover:text-green-700"
-              >
-                <User className="w-4 h-4" />
-                <span className="hidden sm:inline">
-                  {(session.user as any).name || "Account"}
-                </span>
-              </Link>
+              <>
+                <Link
+                  href="/profile"
+                  className="flex items-center gap-2 text-sm text-gray-700 hover:text-green-700"
+                >
+                  <User className="w-4 h-4" />
+                  <span className="hidden sm:inline">
+                    {(session.user as any).name || "Account"}
+                  </span>
+                </Link>
+                <Button
+                  variant="ghost"
+                  onClick={() => signOut()}
+                  className="text-sm text-gray-700 hover:bg-red-50 hover:text-red-700"
+                >
+                  <LogOut className="w-4 h-4" />
+                  <span className="hidden sm:inline">Sign out</span>
+                </Button>
+              </>
             ) : (
               <>
                 <Link

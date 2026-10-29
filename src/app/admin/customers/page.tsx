@@ -31,7 +31,7 @@ export default async function AdminCustomersPage() {
                   <td className="px-4 py-3 font-medium text-green-900">{c.name}</td>
                   <td className="px-4 py-3 text-gray-600">{c.phone}</td>
                   <td className="px-4 py-3 text-gray-600">{c.whatsapp || "—"}</td>
-                  <td className="px-4 py-3 text-gray-600">{c.district}</td>
+                  <td className="px-4 py-3 text-gray-600">{c.province}</td>
                   <td className="px-4 py-3 font-semibold text-green-800">{c._count.orders}</td>
                 </tr>
               ))

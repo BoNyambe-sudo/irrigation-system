@@ -104,7 +104,7 @@ model Customer {
   name      String
   phone     String
   whatsapp  String?
-  district  String
+  province  String
   createdAt DateTime @default(now())
   orders    Order[]
 }
@@ -120,7 +120,7 @@ model Order {
   lng           Float
   accuracy      Float?
   address       String
-  district      String
+  province      String
   amount        Float
   paymentMethod PaymentMethod
   paymentStatus PaymentStatus @default(PENDING)

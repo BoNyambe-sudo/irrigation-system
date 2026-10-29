@@ -51,7 +51,7 @@ export default async function MyOrdersPage({ searchParams }: { searchParams: Pro
               </div>
               <span className="text-xs font-semibold px-2 py-1 rounded bg-green-100 text-green-800">{o.status}</span>
             </div>
-            <p className="text-sm text-gray-600 mb-2">K{o.amount.toLocaleString()} · {o.customer.district}</p>
+            <p className="text-sm text-gray-600 mb-2">K{o.amount.toLocaleString()} · {o.customer.province}</p>
             <h3 className="font-semibold text-green-800 text-sm mb-2">Timeline</h3>
             <ul className="space-y-1 text-sm text-gray-700">
               {o.timeline.map((t: any) => (

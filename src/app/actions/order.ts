@@ -30,10 +30,10 @@ export async function createOrder(input: OrderInput) {
   const customer = existingCustomer
     ? await prisma.customer.update({
         where: { id: existingCustomer.id },
-        data: { name: data.name, whatsapp: data.whatsapp, district: data.district },
+        data: { name: data.name, whatsapp: data.whatsapp, province: data.province },
       })
     : await prisma.customer.create({
-        data: { name: data.name, phone: data.phone, whatsapp: data.whatsapp, district: data.district },
+        data: { name: data.name, phone: data.phone, whatsapp: data.whatsapp, province: data.province },
       });
 
   const order = await prisma.order.create({
@@ -47,7 +47,7 @@ export async function createOrder(input: OrderInput) {
       lng: data.lng,
       accuracy: data.accuracy ?? null,
       address: data.address,
-      district: data.district,
+      province: data.province,
       amount,
       paymentMethod: data.paymentMethod,
       paymentStatus: payment.success ? "PAID" : "PENDING",
@@ -68,6 +68,7 @@ export async function createOrder(input: OrderInput) {
 
   emitOrderCreated(order);
   emitOrderStatusChange(order);
+  revalidatePath("/admin/orders");
 
   return { success: true as const, orderId: order.id, reference: payment.reference };
 }
@@ -87,6 +88,7 @@ export async function updateOrderStatus(orderId: string, status: string) {
   });
 
   emitOrderStatusChange(order);
+  revalidatePath("/admin/orders");
 
 
   return { success: true as const, order };

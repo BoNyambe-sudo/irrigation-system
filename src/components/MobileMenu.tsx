@@ -2,8 +2,8 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { useSession } from "next-auth/react";
-import { Menu, X, User } from "lucide-react";
+import { signOut, useSession } from "next-auth/react";
+import { Menu, X, User, LogOut } from "lucide-react";
 
 export default function MobileMenu() {
   const [open, setOpen] = useState(false);
@@ -22,9 +22,20 @@ export default function MobileMenu() {
             <Link href="/order" onClick={() => setOpen(false)}>Order</Link>
             {role === "ADMIN" && <Link href="/admin" onClick={() => setOpen(false)}>Dashboard</Link>}
             {session?.user ? (
-              <Link href="/profile" onClick={() => setOpen(false)}>
-                <User className="w-4 h-4 inline mr-1" /> Account
-              </Link>
+              <>
+                <Link
+                  href="/profile"
+                  onClick={() => setOpen(false)}
+                >
+                  <User className="w-4 h-4 inline mr-1" /> Account
+                </Link>
+                <button
+                  onClick={() => { setOpen(false); signOut(); }}
+                  className="flex items-center gap-2 text-sm text-gray-700 hover:text-red-700"
+                >
+                  <LogOut className="w-4 h-4" /> Sign out
+                </button>
+              </>
             ) : (
               <>
                 <Link href="/auth/signup" onClick={() => setOpen(false)}>Sign up</Link>

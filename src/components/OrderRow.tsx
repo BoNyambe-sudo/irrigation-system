@@ -11,7 +11,7 @@ export function OrderRow({ order, onStatusChange }: { order: LiveOrder; onStatus
         <div className="text-xs text-gray-500">{order.customer.phone}</div>
       </td>
       <td className="px-4 py-3 text-gray-700">{order.product.name}</td>
-      <td className="px-4 py-3 text-gray-700">{order.customer.district}</td>
+      <td className="px-4 py-3 text-gray-700">{order.customer.province}</td>
       <td className="px-4 py-3 font-semibold text-amber-700">K{order.amount.toLocaleString()}</td>
       <td className="px-4 py-3 text-gray-600">{order.paymentMethod}</td>
       <td className="px-4 py-3">

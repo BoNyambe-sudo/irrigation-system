@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useSSE } from "@/hooks/useSSE";
 import { toast } from "sonner";
 import { Bell } from "lucide-react";
@@ -10,7 +10,7 @@ import { playSound } from "@/lib/sound";
 import type { Order } from "@prisma/client";
 
 export type LiveOrder = Order & {
-  customer: { name: string; phone: string; district: string };
+  customer: { name: string; phone: string; province: string };
   product: { name: string; slug: string };
 };
 
@@ -26,13 +26,20 @@ function normalize(o: any): LiveOrder {
 
 export function LiveOrders({ initialOrders }: { initialOrders: LiveOrder[] }) {
   const [orders, setOrders] = useState<LiveOrder[]>(initialOrders);
+  const seenIds = useRef(new Set<string>());
+
+  useEffect(() => {
+    initialOrders.forEach((o) => seenIds.current.add(o.id));
+  }, []);
 
   useSSE((msg) => {
     if (msg.type === "order:new") {
       const order = normalize(msg.data);
-      setOrders((prev) => [order, ...prev]);
+      if (seenIds.current.has(order.id)) return;
+      seenIds.current.add(order.id);
+      setOrders((prev) => (prev.some((o) => o.id === order.id) ? prev : [order, ...prev]));
       toast.success(`New order from ${order.customer.name}`, {
-        description: `K${order.amount.toLocaleString()} · ${order.customer.district}`,
+        description: `K${order.amount.toLocaleString()} · ${order.customer.province}`,
       });
       playSound();
     } else if (msg.type === "order:status") {
@@ -41,6 +48,39 @@ export function LiveOrders({ initialOrders }: { initialOrders: LiveOrder[] }) {
       toast.info(`Order ${order.id.slice(0, 8)} → ${order.status}`);
     }
   });
+
+  useEffect(() => {
+    let timer: ReturnType<typeof setInterval>;
+    const fetchOrders = async () => {
+      try {
+        const res = await fetch("/api/orders", { cache: "no-store" });
+        const next = (await res.json()) as LiveOrder[];
+        const newOrders = next.filter((o) => !seenIds.current.has(o.id));
+        setOrders((prev) => {
+          const merged = [...next];
+          prev.forEach((local) => {
+            const server = merged.find((m) => m.id === local.id);
+            if (server && server.status !== local.status) {
+              Object.assign(server, { status: local.status });
+            }
+          });
+          return merged.map(normalize);
+        });
+        next.forEach((o) => seenIds.current.add(o.id));
+        newOrders.forEach((order) => {
+          toast.success(`New order from ${order.customer.name}`, {
+            description: `K${order.amount.toLocaleString()} · ${order.customer.province}`,
+          });
+          playSound();
+        });
+      } catch {
+        /* ignore poll failures */
+      }
+    };
+    fetchOrders();
+    timer = setInterval(fetchOrders, 5000);
+    return () => clearInterval(timer);
+  }, []);
 
   return (
     <div className="rounded-xl border border-green-100 bg-white overflow-x-auto">
