@@ -184,7 +184,7 @@ export default function CheckoutForm({ product }: Props) {
             />
             <div className="grid sm:grid-cols-2 gap-4">
               <div>
-                <label className="text-sm text-gray-600">District</label>
+                <label className="text-sm text-gray-600">Province</label>
                 <select
                   className="w-full mt-1 px-3 py-2 rounded-lg border border-green-200 bg-white"
                   value={location.province}

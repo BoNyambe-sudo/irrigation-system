@@ -89,7 +89,7 @@ export function LiveOrders({ initialOrders }: { initialOrders: LiveOrder[] }) {
           <tr>
             <th className="px-4 py-3 font-semibold">Customer</th>
             <th className="px-4 py-3 font-semibold">System</th>
-            <th className="px-4 py-3 font-semibold">District</th>
+            <th className="px-4 py-3 font-semibold">Province</th>
             <th className="px-4 py-3 font-semibold">Amount</th>
             <th className="px-4 py-3 font-semibold">Payment</th>
             <th className="px-4 py-3 font-semibold">Status</th>

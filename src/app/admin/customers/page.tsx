@@ -16,7 +16,7 @@ export default async function AdminCustomersPage() {
               <th className="px-4 py-3 font-semibold">Name</th>
               <th className="px-4 py-3 font-semibold">Phone</th>
               <th className="px-4 py-3 font-semibold">WhatsApp</th>
-              <th className="px-4 py-3 font-semibold">District</th>
+              <th className="px-4 py-3 font-semibold">Province</th>
               <th className="px-4 py-3 font-semibold">Orders</th>
             </tr>
           </thead>

@@ -48,7 +48,7 @@ export default async function AdminOrderDetail({ params }: { params: Promise<{ i
                 <dd className="font-medium text-green-900">{order.customer.whatsapp || "—"}</dd>
               </div>
               <div>
-                <dt className="text-gray-500">District</dt>
+                <dt className="text-gray-500">Province</dt>
                 <dd className="font-medium text-green-900">{order.customer.province}</dd>
               </div>
             </dl>
