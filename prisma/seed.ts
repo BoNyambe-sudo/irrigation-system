@@ -5,12 +5,15 @@ async function main() {
   console.log("Seeding...");
 
   // Create admin
-  const adminPassword = await bcrypt.hash("admin123", 10);
+  const adminPassword = await bcrypt.hash(
+    process.env.ADMIN_PASSWORD as string,
+    10,
+  );
   await prisma.user.upsert({
-    where: { email: "admin@irrigation.zm" },
+    where: { email: process.env.ADMIN_EMAIL as string },
     update: {},
     create: {
-      email: "admin@irrigation.zm",
+      email: process.env.ADMIN_EMAIL as string,
       name: "Admin User",
       password: adminPassword,
       role: "ADMIN",
@@ -18,12 +21,15 @@ async function main() {
   });
 
   // Create customer
-  const customerPassword = await bcrypt.hash("customer123", 10);
+  const customerPassword = await bcrypt.hash(
+    process.env.CUSOMTER_PASSWORD as string,
+    10,
+  );
   await prisma.user.upsert({
-    where: { email: "customer@test.zm" },
+    where: { email: process.env.CUSOMTER_EMAIL as string },
     update: {},
     create: {
-      email: "customer@test.zm",
+      email: process.env.CUSOMTER_EMAIL as string,
       name: "Test Customer",
       password: customerPassword,
       role: "USER",
@@ -39,7 +45,9 @@ async function main() {
       coverageAcres: 1,
       priceZMW: 15000,
       features: ["Complete kit", "Easy installation", "Water efficient"],
-      images: ["https://images.unsplash.com/photo-1625246333195-78d9c38ad449?w=800"],
+      images: [
+        "https://images.unsplash.com/photo-1625246333195-78d9c38ad449?w=800",
+      ],
       specs: { pressure: "1-2 bar", emitters: "2000" },
     },
     {
@@ -49,7 +57,9 @@ async function main() {
       coverageAcres: 2,
       priceZMW: 25000,
       features: ["Full coverage", "Durable", "Adjustable"],
-      images: ["https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=800"],
+      images: [
+        "https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=800",
+      ],
       specs: { radius: "15m", nozzles: "12" },
     },
     {
@@ -59,7 +69,9 @@ async function main() {
       coverageAcres: 5,
       priceZMW: 85000,
       features: ["Automated", "Large coverage", "Efficient"],
-      images: ["https://images.unsplash.com/photo-1574943320219-553eb213f72d?w=800"],
+      images: [
+        "https://images.unsplash.com/photo-1574943320219-553eb213f72d?w=800",
+      ],
       specs: { span: "50m", automation: "Yes" },
     },
     {
@@ -69,7 +81,9 @@ async function main() {
       coverageAcres: 0.5,
       priceZMW: 8500,
       features: ["Compact", "Affordable", "Easy setup"],
-      images: ["https://images.unsplash.com/photo-1461354464878-ad92f492a5a0?w=800"],
+      images: [
+        "https://images.unsplash.com/photo-1461354464878-ad92f492a5a0?w=800",
+      ],
       specs: { flow: "2L/h", coverage: "2m" },
     },
     {
@@ -79,7 +93,9 @@ async function main() {
       coverageAcres: 3,
       priceZMW: 35000,
       features: ["Cost effective", "Long lasting", "Low pressure"],
-      images: ["https://images.unsplash.com/photo-1530836369250-ef72a3f5cda8?w=800"],
+      images: [
+        "https://images.unsplash.com/photo-1530836369250-ef72a3f5cda8?w=800",
+      ],
       specs: { tape: "16mm", spacing: "30cm" },
     },
     {
@@ -89,7 +105,9 @@ async function main() {
       coverageAcres: 4,
       priceZMW: 120000,
       features: ["Solar powered", "Off-grid", "Sustainable"],
-      images: ["https://images.unsplash.com/photo-1466611653911-95081537e5b7?w=800"],
+      images: [
+        "https://images.unsplash.com/photo-1466611653911-95081537e5b7?w=800",
+      ],
       specs: { pump: "2HP", panels: "3000W" },
     },
   ];
@@ -107,24 +125,101 @@ async function main() {
   // Seed 15 demo orders around Lusaka for the admin dashboard/map.
   const allProducts = await prisma.product.findMany();
   const demoCustomers = [
-    { name: "John Mwale", phone: "+260971111111", whatsapp: "+260971111111", district: "Lusaka" },
-    { name: "Mary Banda", phone: "+260972222222", whatsapp: "+260972222222", district: "Lusaka" },
-    { name: "Patrick Sichilongo", phone: "+260973333333", whatsapp: "+260973333333", district: "Copperbelt" },
-    { name: "Grace Phiri", phone: "+260974444444", whatsapp: "+260974444444", district: "Lusaka" },
-    { name: "Daniel Chanda", phone: "+260975555555", whatsapp: "+260975555555", district: "Lusaka" },
-    { name: "Ruth Mumba", phone: "+260976666666", whatsapp: "+260976666666", district: "Central" },
-    { name: "Samuel Lungu", phone: "+260977777777", whatsapp: "+260977777777", district: "Lusaka" },
-    { name: "Agnes Mwila", phone: "+260978888888", whatsapp: "+260978888888", district: "Lusaka" },
-    { name: "Paul Kunda", phone: "+260979999999", whatsapp: "+260979999999", district: "Eastern" },
-    { name: "Catherine Moyo", phone: "+2609611111111", whatsapp: "+2609611111111", district: "Lusaka" },
-    { name: "Francis Mubanga", phone: "+2609622222222", whatsapp: "+2609622222222", district: "Lusaka" },
-    { name: "Lillian Mulenga", phone: "+2609633333333", whatsapp: "+2609633333333", district: "Lusaka" },
-    { name: "Peter Tembo", phone: "+2609644444444", whatsapp: "+2609644444444", district: "Copperbelt" },
-    { name: "Susan Hachipu", phone: "+2609655555555", whatsapp: "+2609655555555", district: "Lusaka" },
-    { name: "Andrew Zulu", phone: "+2609666666666", whatsapp: "+2609666666666", district: "Lusaka" },
+    {
+      name: "John Mwale",
+      phone: "+260971111111",
+      whatsapp: "+260971111111",
+      district: "Lusaka",
+    },
+    {
+      name: "Mary Banda",
+      phone: "+260972222222",
+      whatsapp: "+260972222222",
+      district: "Lusaka",
+    },
+    {
+      name: "Patrick Sichilongo",
+      phone: "+260973333333",
+      whatsapp: "+260973333333",
+      district: "Copperbelt",
+    },
+    {
+      name: "Grace Phiri",
+      phone: "+260974444444",
+      whatsapp: "+260974444444",
+      district: "Lusaka",
+    },
+    {
+      name: "Daniel Chanda",
+      phone: "+260975555555",
+      whatsapp: "+260975555555",
+      district: "Lusaka",
+    },
+    {
+      name: "Ruth Mumba",
+      phone: "+260976666666",
+      whatsapp: "+260976666666",
+      district: "Central",
+    },
+    {
+      name: "Samuel Lungu",
+      phone: "+260977777777",
+      whatsapp: "+260977777777",
+      district: "Lusaka",
+    },
+    {
+      name: "Agnes Mwila",
+      phone: "+260978888888",
+      whatsapp: "+260978888888",
+      district: "Lusaka",
+    },
+    {
+      name: "Paul Kunda",
+      phone: "+260979999999",
+      whatsapp: "+260979999999",
+      district: "Eastern",
+    },
+    {
+      name: "Catherine Moyo",
+      phone: "+2609611111111",
+      whatsapp: "+2609611111111",
+      district: "Lusaka",
+    },
+    {
+      name: "Francis Mubanga",
+      phone: "+2609622222222",
+      whatsapp: "+2609622222222",
+      district: "Lusaka",
+    },
+    {
+      name: "Lillian Mulenga",
+      phone: "+2609633333333",
+      whatsapp: "+2609633333333",
+      district: "Lusaka",
+    },
+    {
+      name: "Peter Tembo",
+      phone: "+2609644444444",
+      whatsapp: "+2609644444444",
+      district: "Copperbelt",
+    },
+    {
+      name: "Susan Hachipu",
+      phone: "+2609655555555",
+      whatsapp: "+2609655555555",
+      district: "Lusaka",
+    },
+    {
+      name: "Andrew Zulu",
+      phone: "+2609666666666",
+      whatsapp: "+2609666666666",
+      district: "Lusaka",
+    },
   ];
 
-  const statuses: ("PENDING" | "REVIEWING" | "QUOTED" | "APPROVED" | "INSTALLED" | "COMPLETED")[] = [
+  const statuses: (
+    "PENDING" | "REVIEWING" | "QUOTED" | "APPROVED" | "INSTALLED" | "COMPLETED"
+  )[] = [
     "PENDING",
     "REVIEWING",
     "QUOTED",
@@ -132,24 +227,38 @@ async function main() {
     "INSTALLED",
     "COMPLETED",
   ];
-  const paymentMethods: ("MOMO" | "AIRTEL" | "CARD" | "CASH")[] = ["MOMO", "AIRTEL", "CARD", "CASH"];
-  const paymentStatuses: ("PENDING" | "PAID" | "FAILED")[] = ["PENDING", "PAID", "PAID"];
+  const paymentMethods: ("MOMO" | "AIRTEL" | "CARD" | "CASH")[] = [
+    "MOMO",
+    "AIRTEL",
+    "CARD",
+    "CASH",
+  ];
+  const paymentStatuses: ("PENDING" | "PAID" | "FAILED")[] = [
+    "PENDING",
+    "PAID",
+    "PAID",
+  ];
 
   // Deterministic jitter around Lusaka centre (-15.4067, 28.2871)
-  const lusakaLat = (i: number) => -15.4067 + (i % 5 - 2) * 0.05 + (i * 0.007) % 0.03;
-  const lusakaLng = (i: number) => 28.2871 + (i % 5 - 2) * 0.05 + (i * 0.009) % 0.03;
+  const lusakaLat = (i: number) =>
+    -15.4067 + ((i % 5) - 2) * 0.05 + ((i * 0.007) % 0.03);
+  const lusakaLng = (i: number) =>
+    28.2871 + ((i % 5) - 2) * 0.05 + ((i * 0.009) % 0.03);
 
   for (let i = 0; i < demoCustomers.length; i++) {
     const c = demoCustomers[i];
     const product = allProducts[i % allProducts.length];
     const farmSize = Math.round((0.5 + (i % 4) * 0.5) * 10) / 10;
-    const pricePerAcre = product.priceZMW / Math.max(product.coverageAcres, 0.1);
+    const pricePerAcre =
+      product.priceZMW / Math.max(product.coverageAcres, 0.1);
     const amount = Math.round(pricePerAcre * farmSize);
 
-    const existingCustomer = await prisma.customer.findFirst({ where: { phone: c.phone } });
-  const customer = existingCustomer
-    ? existingCustomer
-    : await prisma.customer.create({ data: c });
+    const existingCustomer = await prisma.customer.findFirst({
+      where: { phone: c.phone },
+    });
+    const customer = existingCustomer
+      ? existingCustomer
+      : await prisma.customer.create({ data: c });
 
     const order = await prisma.order.create({
       data: {
